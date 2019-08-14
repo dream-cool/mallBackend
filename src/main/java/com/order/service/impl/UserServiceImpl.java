@@ -58,10 +58,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUserNameAndPassWord(String userName, String passWord) {
         User user = userMapper.findByUserNameAndPassWord(userName,passWord);
-        if (user == null) {
-            log.error("【查询用户】用户验证失败");
-            throw new OperationFailedException(ResultEnum.USER_SELECT_BY_USERNAME_AND_PASSWORD_FAILED);
-        }
+
         return user;
     }
 

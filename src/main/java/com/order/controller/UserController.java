@@ -2,6 +2,7 @@ package com.order.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.order.dto.UserDto;
 import com.order.exception.OperationFailedException;
 import com.order.pojo.User;
 import com.order.service.UserService;
@@ -89,6 +90,18 @@ public class UserController {
 
         int pn = Integer.parseInt(currentPage);
         int size = Integer.parseInt(pageSize);
+        PageHelper.startPage(pn, size);
+        List<User> userList = userService.findAllUser();
+        PageInfo<User> pageInfo = new PageInfo<>(userList);
+        return pageInfo;
+    }
+
+    @RequestMapping("/listByCondiction")
+    @ResponseBody
+    public PageInfo<User> userlistByCondiction(@RequestBody UserDto userDto, String currentPage, String pageSize) {
+        int pn = Integer.parseInt(currentPage);
+        int size = Integer.parseInt(pageSize);
+
         PageHelper.startPage(pn, size);
         List<User> userList = userService.findAllUser();
         PageInfo<User> pageInfo = new PageInfo<>(userList);

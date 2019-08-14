@@ -54,7 +54,7 @@ public class LoginController {
         String password = (String) template.opsForHash().get(user.getUserName(), "password");
         if (password != null) {
             temp = (String) template.opsForHash().get(user.getUserName(), "count");
-            ;
+
             if (Integer.parseInt(temp) >= 2) {
                 map.put("code", "400");
                 template.delete(user.getUserName());
@@ -108,8 +108,8 @@ public class LoginController {
 
     @RequestMapping("/passwordLoginCheck")
     @ResponseBody
-    public Map<String,String> passwordLoginCheck( User user ){
-        Map<String,String> map =new HashMap<>();
+    public Map<String,String> passwordLoginCheck(@RequestBody User user ){
+        Map<String,String> map =new HashMap<>(16);
         String code="2000";
         User u=userService.findByUserNameAndPassWord(user.getUserName(), user.getPassWord());
         if(u==null){
