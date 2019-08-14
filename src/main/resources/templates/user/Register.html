@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>用户注册</title>
+    <link th:href="@{/plugins/layui/css/layui.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/vue.js}"></script>
+    <script type="text/javascript" th:src="@{/vue-resource.js}"></script>
+    <script type="text/javascript" th:src="@{/vue-router.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/jquery/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/layui/layui.js}"></script>
+</head>
+<body class="layui-layout-body">
+<div style="margin-left: 35%;margin-top: 10%"  >
+    <form class="layui-form" action="/user/register" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="userName" required lay-verify="required" placeholder="请输入用户名"
+                       autocomplete="off" class="layui-input"><br>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span>*</span>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span id="msg" class="layui-form-mid layui-word-aux"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="passWord1" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off" class="layui-input"><br>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span>*</span>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span id="msg_pwd1" class="layui-form-mid layui-word-aux"></span>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="passWord" id ="passWord2" required lay-verify="required" placeholder="请确认密码"
+                       autocomplete="off" class="layui-input"><br>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span>*</span>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span id="msg_pwd2" class="layui-form-mid layui-word-aux"></span>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email"  placeholder="请输入邮箱" autocomplete="off"
+                       class="layui-input"><br>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span id="msg_email" class="layui-form-mid layui-word-aux"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-inline">
+                <input type="text" name="tel"  placeholder="请输入电话" autocomplete="off"
+                       class="layui-input"><br>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="address"   placeholder="请输入地址" autocomplete="off"
+                       class="layui-input"><br>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男">
+                <input type="radio" name="sex" value="女" title="女" checked>
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-left: -5%">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" id="butReg">注册</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <div class="layui-form-mid layui-word-aux">*项必填</div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+<script>
+    layui.use(['element', 'form', 'jquery'], function () {
+        var element = layui.element;
+        var form = layui.form;
+        var $ = layui.jquery;
+        form.render();
+        //监听提交
+        // form.on('submit(formDemo)', function(data){
+        //     layer.msg(JSON.stringify(data.field));
+        //     return false;
+        // });
+
+        //用户名检查
+        $(function () {
+            //input<name="这里是input标签的name属性">表示某一input文本框对象 通过这个的.val可以获取该文本框里的内容
+            $('input[name=userName]').blur(function () {
+                //定义一个值为input文本框内容的uname变量
+                // var uname=$('input[name=username]').val();
+                // var obj={
+                //     //将uname变量赋给obj对象的username属性
+                //     //这里对象的属性要与等会需要用到的pojo类属性一致
+                //     username:uname,
+                // }
+                var userName = $('input[name=userName]').val();
+                var obj = {
+                    userName: userName,
+                }
+                $.ajax({
+                    url: "/user/registerCheck",
+                    type: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        if (data.code == 202) {
+                            $('#msg').html('用户名可以使用')
+                            $("#butReg").removeAttr("disabled","userName_disabled");
+                        } else if (data.code == 402) {
+                            $('#msg').html('用户名已被注册')
+                            $("#butReg").attr("disabled", "userName_disabled")
+                            userName.focus;
+                        } else if (data.code == 403)   {
+                            $('#msg').html('用户名不能为空')
+                            $("#butReg").attr("disabled", "userName_disabled")
+                            userName.focus;
+                        }
+                    }
+                })
+            })
+        })
+
+        //密码检查
+        $(function () {
+            $('input[name=passWord1]').blur(function () {
+                var passWord1 = $('input[name=passWord1]').val();
+                var reg = /^[A-Za-z0-9]{6,20}$/;
+                if (passWord1.length < 8){
+                    $('#msg_pwd1').html('用户名密码长度不能低于八位')
+                    $("#butReg").attr("disabled", "password1_disabled")
+                    passWord1.focus;
+                } else if (!(passWord1.match(reg))){//判断复杂程度
+                    $('#msg_pwd1').html('密码必须为8-20位字母数字组合：')
+                    $("#butReg").attr("disabled", "password1_disabled")
+                    passWord1.focus;
+                } else {
+                    $('#msg_pwd1').html('密码可以使用')
+                    $("#butReg").removeAttr("disabled","password1_disabled");
+                }
+            })
+        })
+        $(function () {
+            $('input[id=passWord2]').blur(function () {
+                var passWord1 = $('input[name=passWord1]').val();
+                var passWord2 = $('input[id=passWord2]').val();
+                if (passWord1 != passWord2) {
+                    $('#msg_pwd2').html('两次密码不一致')
+                    $("#butReg").attr("disabled", "password2_disabled")
+                    passWord2.focus;
+                } else {
+                    $('#msg_pwd2').html('确认密码通过')
+                    $("#butReg").removeAttr("disabled","password2_disabled");
+                }
+            })
+        })
+
+        //邮箱检查
+        $(function () {
+            $('input[name=email]').blur(function () {
+                var email = $('input[name=email]').val();
+                if (email != null && email != ''){
+                    var regm=/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+                    if (!(email.match(regm))){//判断邮箱是否满足格式
+                        $('#msg_email').html('邮箱格式不正确')
+                        $("#butReg").attr("disabled", "email_disabled")
+                        email.focus;
+                    } else {
+                        $('#msg_email').html('')
+                        $("#butReg").removeAttr("email_disabled");
+                    }
+                } else {
+                    $('#msg_email').html('')
+                    $("#butReg").removeAttr("disabled","email_disabled");
+                }
+            })
+        })
+    });
+</script>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>用户管理</title>
+    <link th:href="@{/plugins/layui/css/layui.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/vue.js}"></script>
+    <script type="text/javascript" th:src="@{/vue-resource.js}"></script>
+    <script type="text/javascript" th:src="@{/vue-router.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/jquery/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/layui/layui.js}"></script>
+</head>
+<body class="layui-layout-body">
+
+<ul class="layui-nav" style="margin-left:11%">
+    <li class="layui-nav-item" style="margin-left:60%">
+        <a href="">购物车<span class="layui-badge">9</span></a>
+    </li>
+    <li class="layui-nav-item" style="margin-left:2%">
+        <a href="">消息<span class="layui-badge">5</span></a>
+    </li>
+    <li class="layui-nav-item" style="margin-left:2%">
+        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">个人中心</a></dd>
+            <dd><a href="javascript:;">修改密码</a></dd>
+            <dd><a href="javascript:;">切换账号</a></dd>
+            <dd><a href="javascript:;">退出</a></dd>
+        </dl>
+    </li>
+</ul>
+
+
+<ul class="layui-nav layui-nav-tree layui-nav-side">
+    <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+    <li class="layui-nav-item"><a href="">返回首页</a></li>
+    <li class="layui-nav-item layui-nav-itemed">
+        <a href="javascript:;">用户管理</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;" >用户列表</a></dd>
+            <dd><a href="javascript:;">添加用户</a></dd>
+            <dd><a href="javascript:;">修改用户</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">商品管理</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">商品列表</a></dd>
+            <dd><a href="javascript:;">添加商品</a></dd>
+            <dd><a href="javascript:;">修改商品</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">订单管理</a>
+        <dl class="layui-nav-child">
+            <dd><a href="">订单列表</a></dd>
+            <dd><a href="">未处理订单</a></dd>
+            <dd><a href="">已完结订单</a></dd>
+        </dl>
+    </li>
+
+</ul>
+
+
+<div id="content" >
+
+    <div  style="position:relative; margin-left: 12%">
+        <table class="layui-table" >
+            <colgroup>
+                <col width="80">
+                <col width="70">
+                <col width="100">
+                <col width="100">
+                <col width="200">
+                <col width="220">
+                <col width="80">
+                <col width="10">
+                <col width="10">
+                <col width="5">
+                <col width="10">
+                <col width="110">
+                <col width="110">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>用户名</th>
+                <th>用户id</th>
+                <th>用户密码</th>
+                <th>电话</th>
+                <th>地址</th>
+                <th>邮箱</th>
+                <th>角色</th>
+                <th>余额</th>
+                <th>VIP</th>
+                <th>sex</th>
+                <th>status</th>
+                <th>注册时间</th>
+                <th>最后登录</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody v-for="user in users">
+            <tr>
+                <td>{{user.userName}}</td>
+                <td>{{user.userId}}</td>
+                <td>{{user.passWord}}</td>
+                <td>{{user.tel}}</td>
+                <td>{{user.address}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.role}}</td>
+                <td>{{user.money}}</td>
+                <td>{{user.isVIP}}</td>
+                <td>{{user.sex}}</td>
+                <td>{{user.state}}</td>
+                <td>{{user.regTime}}</td>
+                <td>{{user.lastLoginTime}}</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="/user/reg" class="layui-btn layui-btn-sm">
+                            <i class="layui-icon">&#xe654;</i>
+                        </a>
+                        <a :href="'/user/findUser?userId='+user.userId"  class="layui-btn layui-btn-sm">
+                            <i class="layui-icon">&#xe642;</i>
+                        </a>
+                        <a @click.prevent="del(user.userId)" class="layui-btn layui-btn-sm">
+                            <i class="layui-icon">&#xe640;</i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="pages" style="position:absolute; bottom:150px;left: 505px">
+
+        <table  >
+            <colgroup>
+                <col width="200">
+                <col width="400">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td >
+                        共{{pageTotal}}条记录,第{{pagePageNum}}/{{pagePages}}页  &nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td >
+                        <a href="javascript:void (0);" page="first"   class="layui-btn layui-btn-sm" >首页</a>
+                        <a href="javascript:void (0);" page="prev"   class="layui-btn layui-btn-sm">
+                            <i class="layui-icon layui-icon-prev"></i>
+                        </a>
+                        <a href="javascript:void (0);" page="next"  class="layui-btn layui-btn-sm">
+                            <i class="layui-icon layui-icon-next"></i>
+                        </a>
+                        <a href="javascript:void (0);" page="last"   class="layui-btn layui-btn-sm">尾页
+                        </a>
+                        <input type="text" size="1" name="Page" style="display:inline-block"  :value="pagePageNum"  >
+                        <a href="javascript:void (0);" page="GO"   class="layui-btn layui-btn-sm">跳转</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+<script>
+    layui.use(['element','form','jquery'],function () {
+        var element=layui.element;
+        var form=layui.form;
+        var $=layui.jquery;
+        $(function () {
+            $('a[page]').click(function () {
+                var pageNum;
+                var Page=$('input[name=Page]').val();
+                var currPage=vm.pagePageNum;
+                var totalPages=vm.pagePages;
+                var v=$(this).attr('page');
+                switch (v) {
+                    case "first":
+                        pageNum=1;
+                        break;
+                    case "prev":
+                        pageNum=parseInt(currPage)-1;
+                        if(pageNum<1)
+                            pageNum=1;
+                        break;
+                    case "next":
+                        pageNum=parseInt(currPage)+1;
+                        if(pageNum>totalPages)
+                            pageNum=totalPages;
+                        break;
+                    case "last":
+                        pageNum=totalPages;
+                        break;
+                    case "GO":
+                        Page=parseInt(Page);
+                        if(Page<1){
+                            layer.msg('小于最小页数',{
+                                offset: ['400px', '750px'],
+                                anim: 6,
+                                icon:5
+                            });
+                            return;
+                        }
+                        if(Page>totalPages){
+                            layer.msg('超过最大页数',{
+                                offset: ['400px', '750px'],
+                                anim: 6,
+                                icon:5
+                            });
+                            return;
+                        }
+                        if (Page>=1&&Page<=totalPages)
+                            pageNum=Page;
+                        else
+                            layer.msg('请输入正确的页数',{
+                                offset: ['400px', '750px'],
+                                anim: 6,
+                                icon:5
+                            });
+                        break;
+                }
+                vm.inputPageNum=pageNum;
+                vm.getInfo()
+            })
+        })
+
+        $(function () {
+            $('a[page]').click(function () {
+                vm.inputPageNum=pageNum;
+                vm.getInfo()
+            })
+        })
+    })
+    var  vm = new Vue({
+        el:"#content",
+        data:{
+            users:[],
+            pageTotal:0,
+            pagePageNum:0,
+            pagePages:0,
+            inputPageNum:1,
+        },
+        created(){
+            this.getInfo();
+        },
+        methods:{
+            getInfo(){
+                this.$http.post("/user/list",
+                    {currentPage:this.inputPageNum},
+                    {emulateJSON:true}
+                ).then(function (result) {
+                    this.users=result.data.list;
+                    this.pageTotal=result.data.total;
+                    this.pagePageNum=result.data.pageNum;
+                    this.pagePages=result.data.pages;
+                    console.log(result.data.list)
+                })
+            },
+            del(id){
+                this.$http.post("/user/delete",
+                    {userId:id},
+                    {emulateJSON:true}
+                ).then(function (result) {
+                    console.log(result.data.list)
+                    if (result.data.code == 201) {
+                        offset: ['400px', '750px'],
+                        layer.msg('删除成功',{
+                            icon:6
+                        });
+
+                    } else if (result.data.code == 401) {
+                        offset: ['400px', '750px'],
+                        layer.msg('删除成功，请重试',{
+                            icon:5
+                        });
+                    }
+                    this.getInfo();
+                })
+            }
+        },
+    })
+</script>
+</html>

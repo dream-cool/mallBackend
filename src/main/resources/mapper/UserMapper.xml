@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.order.mapper.UserMapper">
+    <select id="findByUserId" resultType="com.order.pojo.User">
+        select
+        user_id userId,
+        user_name  userName,
+        pass_word  passWord,
+        email,
+        tel,
+        address,
+        money,
+        sex,
+        state,
+        isVIP,
+        perms,
+        role,
+        reg_time regTime,
+        last_login_time lastLoginTime
+        from ording.user where  user_id=#{userId}
+    </select>
+
+    <select id="findByUserName" resultType="com.order.pojo.User">
+        select
+        user_name userName
+        from ording.user where user_name=#{userName}
+    </select>
+
+    <select id="findAllUser" resultType="com.order.pojo.User">
+      select
+        user_id userId,
+        user_name  userName,
+        pass_word  passWord,
+        email,
+        tel,
+        address,
+        money,
+        sex,
+        state,
+        isVIP,
+        perms,
+        role,
+        reg_time regTime,
+        last_login_time lastLoginTime
+      from ording.user
+    </select>
+
+    <select id="findByUserNameAndPassWord" resultType="com.order.pojo.User">
+        select
+        user_id userId,
+        user_name  userName,
+        pass_word  passWord,
+        email,
+        tel,
+        address,
+        money,
+        sex,
+        state,
+        isVIP,
+        perms,
+        role,
+        reg_time regTime,
+        last_login_time lastLoginTime
+        from  ording.user where user_name = #{userName} and pass_word = #{passWord}
+    </select>
+    <insert id="insertOneUser" >
+      insert into ording.user
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="userName != null and userName != ''">
+              user_name,
+          </if>
+          <if test="passWord != null and passWord != ''">
+              pass_word,
+          </if>
+          <if test="email != null and email != ''">
+              email,
+          </if>
+          <if test="tel != null and tel != ''">
+              tel,
+          </if>
+          <if test="address != null and address != ''">
+              address,
+          </if>
+          <if test="money != null and money != ''">
+              money,
+          </if>
+          <if test="state != null and state != ''">
+              state,
+          </if>
+          <if test="isVIP != null and isVIP != ''">
+              isVIP,
+          </if>
+          <if test="perms != null and perms != ''">
+              perms,
+          </if>
+          <if test="role != null and role != ''">
+              role,
+          </if>
+          <if test="regTime != null ">
+              reg_time,
+          </if>
+          <if test="lastLoginTime != null ">
+              last_login_time,
+          </if>
+      </trim>
+      <trim prefix="values(" suffix=")" suffixOverrides=",">
+          <if test="userName != null and userName != ''">
+              #{userName},
+          </if>
+          <if test="passWord != null and passWord != ''">
+              #{passWord},
+          </if>
+          <if test="email != null and email != ''">
+              #{email},
+          </if>
+          <if test="tel != null and tel != ''">
+              #{tel},
+          </if>
+          <if test="address != null and address != ''">
+              #{address},
+          </if>
+          <if test="money != null and money != ''">
+              #{money},
+          </if>
+          <if test="state != null and state != ''">
+              #{state},
+          </if>
+          <if test="isVIP != null and isVIP != ''">
+              #{isVIP},
+          </if>
+          <if test="perms != null and perms != ''">
+              #{perms},
+          </if>
+          <if test="role != null and role != ''">
+              #{role},
+          </if>
+          <if test="regTime != null ">
+              #{regTime} ,
+          </if>
+          <if test="lastLoginTime != null ">
+              #{lastLoginTime} ,
+          </if>
+      </trim>
+    </insert>
+
+
+    <update id="updateOneUser"   >
+        update ording.user set
+        <trim suffixOverrides="," >
+            <if test="user.userName != null and user.userName != ''">
+                user_name=#{user.userName},
+            </if>
+            <if test="user.passWord != null and user.passWord != ''">
+                pass_word=#{user.passWord},
+            </if>
+            <if test="user.email != null and user.email != ''">
+                email=#{user.email},
+            </if>
+            <if test="user.tel != null and user.tel != ''">
+                tel=#{user.tel},
+            </if>
+            <if test="user.address != null and user.address != ''">
+                address=#{user.address},
+            </if>
+            <if test="user.money != null and user.money != ''">
+                money = #{user.money},
+            </if>
+            <if test="user.sex != null and user.sex != ''">
+                sex=#{user.sex},
+            </if>
+            <if test="user.state != null and user.state != ''">
+                state=#{user.state},
+            </if>
+            <if test="user.isVIP != null and user.isVIP != ''">
+                isVIP = #{user.isVIP} ,
+            </if>
+            <if test="user.perms != null and user.perms != ''">
+                perms = #{user.perms} ,
+            </if>
+            <if test="user.role != null and user.role != ''">
+                role = #{user.role} ,
+            </if>
+            <if test="user.regTime != null ">
+                reg_time=#{user.regTime},
+            </if>
+            <if test="user.lastLoginTime != null">
+                last_login_time=#{user.lastLoginTime},
+            </if>
+        </trim>
+            where user_id=#{user.userId}
+    </update>
+
+    <update id="updateUserlastLoginTime">
+        update ording.user set
+         last_login_time = #{lastLoginTime}
+         where user_id = #{userId}
+    </update>
+
+    <update id="updateUserMoney">
+        update ording.user set
+         money = #{money}
+         where user_id = #{userId}
+    </update>
+
+    <update id="updateUserState">
+        update ording.user set
+        state = #{state}
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateUserPassWord">
+        update ording.user set
+        pass_word = #{newPassWord}
+        where
+        user_id = #{userId}
+        and
+        pass_word = #{oldPassWord}
+    </update>
+
+    <delete id="deleteOneUser">
+      delete from ording.user where user_id=#{userId}
+    </delete>
+
+
+</mapper>

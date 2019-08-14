@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>用户信息</title>
+    <link th:href="@{/plugins/layui/css/layui.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/vue.js}"></script>
+    <script type="text/javascript" th:src="@{/vue-resource.js}"></script>
+    <script type="text/javascript" th:src="@{/vue-router.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/jquery/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/plugins/layui/layui.js}"></script>
+</head>
+<body class="layui-layout-body"  >
+
+<div>
+    <a href="/user/man"  class="layui-btn layui-btn-sm" >
+        <i class="layui-icon-return">&#xe65c;</i>
+    </a>
+</div>
+
+<div id="content">
+    <div style="margin-left: 30%">
+        <div  class="layui-form" >
+            <div class="layui-input-inline">
+                <input type="hidden" name="userId" v-model="user.userId" lay-verify="title" >
+            </div>
+            <div class="layui-input-inline">
+                <input type="hidden" name="Id" th:value="${userId}" lay-verify="title" >
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" v-model="user.userName" required  lay-verify="required"
+                           class="layui-input" disabled>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span>用户名无法修改</span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" v-model="user.email" lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                    <br>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span id="msg_email" class="layui-form-mid layui-word-aux"></span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tel" v-model="user.tel" required  lay-verify="required" placeholder="请输入电话" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="address" v-model="user.address"  required  lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">余额</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="money" v-model="user.money"
+                           required  lay-verify="required" autocomplete="off" class="layui-input" disabled>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">VIP</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="isVIP" value="1" title="是"  lay-filter="isVIP" v-model="user.isVIP" >
+                    <input type="radio" name="isVIP" value="0" title="不是"  lay-filter="isVIP" v-model="user.isVIP" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="1" title="男"  lay-filter="sex" v-model="user.sex" >
+                    <input type="radio" name="sex" value="0" title="女"  lay-filter="sex" v-model="user.sex" >
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="state" value="1" lay-filter="state" v-model="user.state"  title="正常">
+                    <input type="radio" name="state" value="0" lay-filter="state" v-model="user.state" title="禁用" >
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="role" value="user" lay-filter="role" v-model="user.role"  title="普通用户">
+                    <input type="radio" name="role" value="employ" lay-filter="role" v-model="user.role" title="员工" >
+                    <input type="radio" name="role" value="admin" lay-filter="role" v-model="user.role" title="管理员" >
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">注册时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="regTime" id="regtime" v-model="user.regTime"  placeholder="yyyy-MM-dd HH:mm:ss">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">最后登录</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" name="lastLoginTime" v-model="user.lastLoginTime" id="logintime" placeholder="yyyy-MM-dd HH:mm:ss" >
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-left: -5%">
+                <div class="layui-input-block">
+                    <button class="layui-btn"   name="but" @click="updateInfo" >修改</button>
+                    <span id="msg_log"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script th:inline="javascript">
+    layui.use(['element','form','jquery','laydate','layer'],function () {
+        var element=layui.element;
+        var form=layui.form;
+        var laydate = layui.laydate;
+        var layer=layui.layer;
+
+
+
+        form.on("radio(sex)", function (data) {
+            vm.user.sex=data.value
+        });
+        form.on("radio(state)", function (data) {
+            vm.user.state=data.value
+        });
+        form.on("radio(isVIP)", function (data) {
+            vm.user.isVIP=data.value
+        });
+        form.on("radio(role)", function (data) {
+            vm.user.role=data.value
+        });
+
+
+        laydate.render({
+            elem:'#logintime',
+            type: 'datetime'
+        });
+        laydate.render({
+            elem:'#regtime',
+            type: 'datetime'
+        });
+
+        //监听提交
+        // form.on('submit(formDemo)', function(data){
+        //     layer.msg(JSON.stringify(data.field));
+        //     return false;
+        // });
+        var $=layui.jquery;
+
+        //邮箱检查
+        $(function () {
+            $('input[name=email]').blur(function () {
+                var email = $('input[name=email]').val();
+                if (email != null && email != ''){
+                    var regm=/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+                    if (!(email.match(regm))){//判断邮箱是否满足格式
+                        $('#msg_email').html('邮箱格式不正确')
+                        $("#but").attr("disabled", "email_disabled")
+                        email.focus;
+                    } else {
+                        $('#msg_email').html('')
+                        $("#but").removeAttr("email_disabled");
+                    }
+                } else {
+                    $('#msg_email').html('')
+                    $("#but").removeAttr("disabled","email_disabled");
+                }
+            })
+        })
+    });
+
+    var  vm=new Vue({
+        el:"#content",
+        data:{
+            user:{
+                userId:'',
+                userName:'',
+                tel:'',
+                address:'',
+                state:'',
+                sex:'',
+                isVIP:'',
+                role:'',
+                money:'',
+                email:'',
+                lastLoginTime:'',
+                regTime:''
+            },
+        },
+        created(){
+            this.getInfo()
+        },
+        methods:{
+            updateInfo(){
+                console.log(this.user.role)
+                this.$http.post("/user/update", {
+                        userId:this.user.userId,
+                        userName:this.user.userName,
+                        tel:this.user.tel,
+                        address:this.user.address,
+                        sex:this.user.sex,
+                        state:this.user.state,
+                        email:this.user.email,
+                        isVIP:this.user.isVIP,
+                        role:this.user.role,
+                        money:this.user.money,
+                        lastLoginTime:this.user.lastLoginTime,
+                        regTime:this.user.regTime
+                    },
+                    {emulateJSON:true}).then(function (result) {
+                        if (result.data.code == 201) {
+                            layer.msg('修改成功',{
+                                icon:6
+                            });
+
+                        } else if (result.data.code == 401) {
+                            layer.msg('修改失败，请重试',{
+                                icon:5
+                            });
+                        }
+                        console.log(result.data)
+                })
+
+            },
+            getInfo(){
+                this.$http.post("/user/finduser",
+                    {userId:$('input[name=Id]').val()},
+                    {emulateJSON:true}).then(function (result) {
+                        this.user = result.data
+                        console.log(this.user)
+                })
+            },
+        }
+    })
+</script>
+</html>
+
